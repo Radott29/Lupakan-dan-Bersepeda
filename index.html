@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="Cycling Base Builder - program base endurance 8 minggu">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>Cycling Base Builder</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#f8fafc;background:#0b1220}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(160deg,#0b1220,#111827);padding:16px}
+.app{max-width:620px;margin:auto}.card{background:#151f31;border:1px solid #26344b;border-radius:20px;padding:18px;margin-bottom:12px}
+h1,h2,h3,p{margin:0}.muted{color:#9ca8bb;font-size:13px}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.brand{color:#60a5fa;font-size:12px;font-weight:800;letter-spacing:1.5px}.title{font-size:27px;font-weight:800;margin-top:4px}.week{font-size:22px;font-weight:800}
+.bar{height:10px;background:#26344b;border-radius:99px;overflow:hidden;margin-top:14px}.fill{height:100%;background:#60a5fa;border-radius:99px;transition:.25s}
+.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.nav button{border:1px solid #26344b;background:#151f31;color:#dbe5f4;border-radius:12px;padding:12px 5px;font-weight:700}.nav button.active{background:#60a5fa;color:#07111f}
+.view{display:none}.view.active{display:block}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:10px}.km{font-size:42px;font-weight:900}.btn{width:100%;border:0;border-radius:14px;padding:14px;font-weight:800;background:#60a5fa;color:#07111f;margin-top:14px;font-size:15px}.btn:disabled{opacity:.5}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{text-align:center;padding:13px;background:#151f31;border:1px solid #26344b;border-radius:15px}.stat b{font-size:20px;display:block}.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;background:#151f31;border:1px solid #26344b;border-radius:15px;margin-bottom:8px;text-align:left;width:100%;color:#f8fafc}.row.done{opacity:.65}.check{width:27px;height:27px;border:2px solid #46566f;border-radius:8px;display:grid;place-items:center;flex:none}.done .check{background:#60a5fa;color:#07111f;border-color:#60a5fa}.left{display:flex;align-items:center;gap:10px}.select{width:100%;padding:12px;border-radius:12px;background:#151f31;color:#fff;border:1px solid #26344b;margin:8px 0 12px;font-size:15px}
+.quote{padding:14px;background:#101a2b;border-radius:15px;margin-top:12px;color:#dbe5f4;font-size:14px}.danger{background:transparent;color:#fca5a5;border:1px solid #57323a}.install{background:#1d2940;border:1px solid #34445d;padding:13px;border-radius:14px;margin-bottom:12px}.small{font-size:12px;color:#9ca8bb;line-height:1.5}
+@media(max-width:380px){body{padding:10px}.title{font-size:23px}.km{font-size:35px}}
+</style>
+</head>
+<body>
+<main class="app">
+<section class="card">
+  <div class="top"><div><div class="brand">MY CYCLING COACH</div><h1 class="title">Base Endurance 🚴</h1><p class="muted">8 minggu · kenaikan volume ±20%</p></div><div class="week" id="weekBadge">W1</div></div>
+  <div class="bar"><div class="fill" id="overallFill"></div></div>
+  <div class="top" style="margin-top:7px"><span class="muted" id="overallText">0 / 40 sesi</span><span class="muted" id="overallPct">0%</span></div>
+</section>
+
+<div class="install" id="installBox" hidden>
+  <b>📲 Pasang ke HP</b><div class="small">Gunakan menu browser <b>Tambahkan ke layar utama / Install app</b> untuk membuka seperti aplikasi.</div>
+</div>
+
+<nav class="nav">
+<button class="active" data-view="today">🏠 Hari ini</button>
+<button data-view="plan">📅 Program</button>
+<button data-view="stats">📈 Progress</button>
+</nav>
+
+<section id="today" class="view active">
+<div class="card">
+  <p class="muted">LATIHAN BERIKUTNYA</p>
+  <div class="hero" style="margin-top:6px"><div><h2 id="todayType">Easy Ride</h2><p class="muted" id="todayInfo">10 km · Zone 2 · RPE 3–4</p></div><div class="km" id="todayKm">10<span style="font-size:14px"> km</span></div></div>
+  <div class="quote" id="coach">Tidak perlu menjadi cepat hari ini. Jadilah konsisten.</div>
+  <button class="btn" id="finish">✓ Selesaikan latihan</button>
+</div>
+<div class="grid">
+<div class="stat"><b id="sKm">0</b><span class="muted">km selesai</span></div>
+<div class="stat"><b id="sSessions">0</b><span class="muted">sesi</span></div>
+<div class="stat"><b id="sWeek">1</b><span class="muted">minggu</span></div>
+</div>
+</section>
+
+<section id="plan" class="view">
+<div class="card">
+<h3>Pilih minggu</h3><select class="select" id="picker"></select>
+<div class="top"><div><span class="muted">TARGET</span><h2 id="target">50 km</h2></div><div style="text-align:right"><span class="muted">SELESAI</span><h2 id="doneKm">0 km</h2></div></div>
+<div class="bar"><div class="fill" id="weekFill"></div></div>
+</div>
+<div id="workouts"></div>
+</section>
+
+<section id="stats" class="view">
+<div class="card"><h3>Perjalananmu</h3><div class="grid" style="margin-top:12px"><div class="stat"><b id="bigKm">0</b><span class="muted">km</span></div><div class="stat"><b id="bigSessions">0</b><span class="muted">sesi</span></div><div class="stat"><b id="bigPct">0%</b><span class="muted">program</span></div></div></div>
+<div class="card"><h3>Target mingguan</h3><div id="bars" style="margin-top:12px"></div></div>
+<button class="btn danger" id="reset">Reset semua progress</button>
+</section>
+</main>
+
+<script>
+const plans=[50,60,72,86,103,124,149,179];
+const km=[[10,10,0,10,0,12,8],[12,12,0,12,0,14,10],[14,14,0,14,0,17,13],[16,17,0,17,0,20,16],[20,20,0,20,0,24,19],[24,24,0,24,0,29,23],[29,29,0,29,0,35,27],[35,35,0,35,0,42,32]];
+const days=['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+const types=['Easy Ride','Zone 2','Rest','Endurance','Rest','Long Easy','Recovery'];
+const quotes=['Tidak perlu menjadi cepat hari ini. Jadilah konsisten.','Satu sesi selesai adalah satu langkah lebih dekat ke target.','Jaga ritme. Bangun mesin aerobic-mu perlahan.','Hari ini latihan, besok tubuhmu berterima kasih.','Jangan kejar angka—kejar konsistensi.','Base yang kuat dibangun dari kilometer yang tenang.','Tetap santai. Tetap jalan. Tetap berkembang.','Lihat seberapa jauh kamu sudah berkembang.'];
+let state=JSON.parse(localStorage.getItem('cyclingBaseProgress')||'null')||km.map(w=>w.map(()=>false));
+let selected=0;
+
+function save(){localStorage.setItem('cyclingBaseProgress',JSON.stringify(state))}
+function totals(){let sessions=0,total=0;state.forEach((w,wi)=>w.forEach((d,i)=>{if(d&&km[wi][i]){sessions++;total+=km[wi][i]}}));return{sessions,total}}
+function next(){for(let w=0;w<8;w++)for(let i=0;i<7;i++)if(km[w][i]&&!state[w][i])return [w,i];return null}
+function render(){
+ const t=totals(), pct=Math.round(t.sessions/40*100), n=next();
+ overallFill.style.width=pct+'%';overallText.textContent=t.sessions+' / 40 sesi';overallPct.textContent=pct+'%';
+ sKm.textContent=t.total;sSessions.textContent=t.sessions;bigKm.textContent=t.total;bigSessions.textContent=t.sessions;bigPct.textContent=pct+'%';
+ if(n){weekBadge.textContent='W'+(n[0]+1);sWeek.textContent=n[0]+1;todayType.textContent=types[n[1]];todayInfo.textContent=km[n[0]][n[1]]+' km · Zone 2 · RPE 3–4';todayKm.innerHTML=km[n[0]][n[1]]+'<span style="font-size:14px"> km</span>';finish.disabled=false;finish.textContent='✓ Selesaikan latihan';coach.textContent=quotes[n[0]]}
+ else{todayType.textContent='Program selesai! 🏆';todayInfo.textContent='8 minggu base endurance selesai';todayKm.textContent='✓';finish.disabled=true;finish.textContent='Semua latihan selesai'}
+ renderPlan();renderBars();
+}
+function renderPlan(){
+ let arr=km[selected], done=arr.reduce((a,v,i)=>a+(state[selected][i]?v:0),0);
+ target.textContent=plans[selected]+' km';doneKm.textContent=done+' km';weekFill.style.width=Math.min(100,done/plans[selected]*100)+'%';
+ workouts.innerHTML='';
+ arr.forEach((v,i)=>{let b=document.createElement('button');b.className='row'+(state[selected][i]?' done':'');b.disabled=!v;b.innerHTML='<span class="left"><span class="check">'+(state[selected][i]?'✓':'')+'</span><span><b>'+days[i]+' · '+types[i]+'</b><br><span class="muted">'+(v?v+' km · easy aerobic':'Hari istirahat')+'</span></span></span><b>'+(v?v+' km':'REST')+'</b>';b.onclick=()=>{state[selected][i]=!state[selected][i];save();render()};workouts.appendChild(b)})
+}
+function renderBars(){
+ bars.innerHTML='';
+ plans.forEach((p,w)=>{let d=km[w].reduce((a,v,i)=>a+(state[w][i]?v:0),0),pc=Math.min(100,Math.round(d/p*100));let x=document.createElement('div');x.innerHTML='<div class="top" style="font-size:12px;margin-bottom:4px"><span>Minggu '+(w+1)+'</span><span>'+d+' / '+p+' km</span></div><div class="bar"><div class="fill" style="width:'+pc+'%"></div></div>';bars.appendChild(x)})
+}
+plans.forEach((_,i)=>{let o=document.createElement('option');o.value=i;o.textContent='Minggu '+(i+1);picker.appendChild(o)});
+picker.onchange=()=>{selected=+picker.value;renderPlan()};
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active')});
+finish.onclick=()=>{let n=next();if(n){state[n[0]][n[1]]=true;save();coach.textContent='Sesi selesai. Recovery yang baik adalah bagian dari latihan. 💪';render()}};
+reset.onclick=()=>{if(confirm('Hapus semua progress?')){state=km.map(w=>w.map(()=>false));save();render()}};
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBox.hidden=false;installBox.onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}}});
+render();
+</script>
+</body>
+</html>
